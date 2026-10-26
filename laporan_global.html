@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laporan Global - INV-TECH</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --sidebar-width: 280px;
+            --primary-color: #1e293b;
+            --accent-blue: #3b82f6;
+            --bg-light: #f1f5f9;
+            --white: #ffffff;
+            --border: #e2e8f0;
+            --success: #10b981;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg-light); display: flex; min-height: 100vh; overflow-x: hidden; }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--primary-color);
+            color: white; position: fixed; height: 100vh;
+            display: flex; flex-direction: column; z-index: 100;
+        }
+        .sidebar-brand { padding: 30px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .sidebar-brand h2 { font-family: 'Poppins'; font-size: 20px; }
+        .sidebar-nav { flex: 1; padding: 20px 15px; }
+        .nav-link {
+            display: flex; align-items: center; gap: 12px;
+            padding: 14px 20px; color: #94a3b8; text-decoration: none;
+            border-radius: 12px; margin-bottom: 8px; transition: 0.3s; font-size: 14px;
+        }
+        .nav-link.active { background: rgba(59, 130, 246, 0.1); color: var(--accent-blue); }
+
+        /* MAIN CONTENT */
+        .main-container { margin-left: var(--sidebar-width); flex: 1; padding: 40px; }
+        .page-header { margin-bottom: 30px; }
+        .page-header h1 { font-family: 'Poppins'; font-size: 24px; color: var(--primary-color); }
+
+        /* FILTER CARD */
+        .filter-card {
+            background: var(--white);
+            border-radius: 20px; padding: 25px; margin-bottom: 30px;
+            border: 1px solid var(--border);
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) auto;
+            gap: 20px; align-items: flex-end;
+        }
+        .filter-group { display: flex; flex-direction: column; gap: 8px; }
+        .filter-group label { font-size: 12px; font-weight: 600; color: #64748b; }
+        .filter-group input, .filter-group select {
+            padding: 12px; border-radius: 10px; border: 1px solid var(--border);
+            background: #f8fafc; font-size: 14px; outline: none;
+        }
+
+        /* BUTTONS */
+        .btn-download {
+            background: var(--primary-color); color: white;
+            padding: 14px 25px; border-radius: 12px; border: none;
+            font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 10px;
+            transition: 0.3s; font-size: 14px;
+        }
+        .btn-download:hover { background: #000; transform: translateY(-2px); }
+
+        /* PREVIEW AREA */
+        .preview-section {
+            background: var(--white); border-radius: 20px; padding: 40px;
+            border: 1px solid var(--border); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
+            min-height: 500px; position: relative;
+        }
+        .preview-header { text-align: center; margin-bottom: 40px; border-bottom: 2px solid #f1f5f9; padding-bottom: 20px; }
+        .preview-header h2 { font-size: 18px; color: var(--primary-color); text-transform: uppercase; letter-spacing: 2px; }
+
+        .preview-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .preview-table th { text-align: left; padding: 12px; background: #f8fafc; border: 1px solid #e2e8f0; font-size: 12px; }
+        .preview-table td { padding: 12px; border: 1px solid #e2e8f0; font-size: 13px; }
+
+        .watermark {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-30deg);
+            font-size: 80px; font-weight: 900; color: rgba(0,0,0,0.03); pointer-events: none;
+        }
+
+        /* NOTIFICATION POPUP - Alur Diperhalus */
+        .notification {
+            position: fixed; top: 30px; right: 30px;
+            background: var(--white); padding: 20px 25px; border-radius: 16px;
+            display: flex; align-items: center; gap: 15px;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2);
+            border-left: 6px solid var(--success);
+            transform: translateX(150%);
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 1000; cursor: pointer;
+        }
+        .notification.show { transform: translateX(0); }
+        .notification:active { transform: scale(0.95); }
+        .notification i { color: var(--success); font-size: 30px; }
+    </style>
+</head>
+<body>
+
+    <div id="notif" class="notification" onclick="triggerDownload()">
+        <i class="fas fa-check-circle"></i>
+        <div>
+            <strong style="display: block; font-family: 'Poppins'; font-size: 16px; color: var(--primary-color);">Laporan Siap!</strong>
+            <span style="font-size: 14px; color: #64748b;">Klik di sini untuk simpan ke File Manager.</span>
+        </div>
+    </div>
+
+    <aside class="sidebar">
+    <div class="sidebar-brand">
+        <i class="fas fa-microchip"></i>
+        <h2>INV-TECH</h2>
+    </div>
+    <nav class="sidebar-nav">
+        <a href="dashboard_admin.html" class="nav-link"><i class="fas fa-chart-pie"></i> Dashboard Utama</a>
+        <a href="manajemen_aset.html" class="nav-link"><i class="fas fa-boxes-stacked"></i> Manajemen Aset</a>
+        <a href="verifikasi_pinjam.html" class="nav-link"><i class="fas fa-clipboard-check"></i> Verifikasi Pinjam</a>
+        <a href="monitoring_maintenance.html" class="nav-link"><i class="fas fa-wrench"></i> Monitoring Maintenance</a>
+        <a href="laporan_global.html" class="nav-link active"><i class="fas fa-file-export"></i> Laporan Global</a>
+        <a href="manajemen_user.html" class="nav-link"><i class="fas fa-user-gear"></i> Manajemen User</a>
+    </nav>
+    </div>
+</aside>
+    <div class="main-container">
+        <header class="page-header">
+            <h1>Laporan Global</h1>
+            <p style="color: #64748b; font-size: 14px;">Ekspor data aset dan aktivitas ke format dokumen resmi.</p>
+        </header>
+
+        <div class="filter-card">
+            <div class="filter-group">
+                <label>Kategori Laporan</label>
+                <select>
+                    <option>Semua Aset</option>
+                    <option>Aset Rusak/Maintenance</option>
+                    <option>Aset Dipinjam</option>
+                    <option>Pengadaan Baru</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Dari Tanggal</label>
+                <input type="date" value="2025-12-01">
+            </div>
+            <div class="filter-group">
+                <label>Sampai Tanggal</label>
+                <input type="date" value="2025-12-25">
+            </div>
+            <button class="btn-download" onclick="showPrintNotif()">
+                <i class="fas fa-file-pdf"></i> Cetak Laporan PDF
+            </button>
+        </div>
+
+        <div style="position: relative;">
+            <div class="preview-section">
+                <div class="watermark">PREVIEW ONLY</div>
+                <div class="preview-header">
+                    <i class="fas fa-microchip" style="font-size: 30px; color: var(--accent-blue); margin-bottom: 10px;"></i>
+                    <h2>Laporan Inventaris Aset Global</h2>
+                    <p style="font-size: 12px; color: #64748b;">Periode: 01 Desember 2025 - 25 Desember 2025</p>
+                </div>
+
+                <table class="preview-table">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Kode Aset</th>
+                            <th>Nama Barang</th>
+                            <th>Kategori</th>
+                            <th>Tgl Masuk</th>
+                            <th>Status Terakhir</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>#AS-001</td>
+                            <td>MacBook Pro M2</td>
+                            <td>Elektronik</td>
+                            <td>10/10/2023</td>
+                            <td><span style="color: var(--success); font-weight: 600;">Tersedia</span></td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>#PR-002</td>
+                            <td>Printer Epson L3110</td>
+                            <td>Periferal</td>
+                            <td>15/11/2023</td>
+                            <td><span style="color: #f59e0b; font-weight: 600;">Maintenance</span></td>
+                        </tr>
+                    <tbody>
+    <tr>
+        <td>1</td>
+        <td>#AS-001</td>
+        <td>MacBook Pro M2</td>
+        <td>Elektronik</td>
+        <td>10/10/2023</td>
+        <td><span style="color: var(--success); font-weight: 600;">Tersedia</span></td>
+    </tr>
+    <tr>
+        <td>2</td>
+        <td>#PR-002</td>
+        <td>Printer Epson L3110</td>
+        <td>Periferal</td>
+        <td>15/11/2023</td>
+        <td><span style="color: #f59e0b; font-weight: 600;">Maintenance</span></td>
+    </tr>
+    <tr>
+        <td>3</td>
+        <td>#TB-045</td>
+        <td>iPad Pro 12.9"</td>
+        <td>Elektronik</td>
+        <td>02/01/2024</td>
+        <td><span style="color: var(--accent-blue); font-weight: 600;">Dipinjam</span></td>
+    </tr>
+    <tr>
+        <td>4</td>
+        <td>#PJ-009</td>
+        <td>Proyektor Sony X</td>
+        <td>Elektronik</td>
+        <td>20/02/2024</td>
+        <td><span style="color: var(--success); font-weight: 600;">Tersedia</span></td>
+    </tr>
+    <tr>
+        <td>5</td>
+        <td>#MN-088</td>
+        <td>Monitor Dell UltraSharp</td>
+        <td>Elektronik</td>
+        <td>12/03/2024</td>
+        <td><span style="color: #ef4444; font-weight: 600;">Rusak</span></td>
+    </tr>
+    <tr>
+        <td>6</td>
+        <td>#FUR-012</td>
+        <td>Meja Kerja Eksekutif</td>
+        <td>Furniture</td>
+        <td>05/04/2024</td>
+        <td><span style="color: var(--success); font-weight: 600;">Tersedia</span></td>
+    </tr>
+    <tr>
+        <td>7</td>
+        <td>#FUR-033</td>
+        <td>Kursi Ergonomis Herman</td>
+        <td>Furniture</td>
+        <td>05/04/2024</td>
+        <td><span style="color: var(--success); font-weight: 600;">Tersedia</span></td>
+    </tr>
+    <tr>
+        <td>8</td>
+        <td>#PC-055</td>
+        <td>PC Desktop Core i9</td>
+        <td>Elektronik</td>
+        <td>18/05/2024</td>
+        <td><span style="color: var(--accent-blue); font-weight: 600;">Dipinjam</span></td>
+    </tr>
+    <tr>
+        <td>9</td>
+        <td>#CAM-01</td>
+        <td>Kamera Sony A7III</td>
+        <td>Elektronik</td>
+        <td>22/06/2024</td>
+        <td><span style="color: #f59e0b; font-weight: 600;">Maintenance</span></td>
+    </tr>
+    <tr>
+        <td>10</td>
+        <td>#SRV-102</td>
+        <td>Server Rack 2U</td>
+        <td>Infrastruktur</td>
+        <td>30/08/2024</td>
+        <td><span style="color: var(--success); font-weight: 600;">Tersedia</span></td>
+    </tr>
+    <tr>
+        <td>11</td>
+        <td>#SWT-09</td>
+        <td>Switch Cisco 24 Port</td>
+        <td>Infrastruktur</td>
+        <td>12/09/2024</td>
+        <td><span style="color: var(--success); font-weight: 600;">Tersedia</span></td>
+    </tr>
+    <tr>
+        <td>12</td>
+        <td>#AS-099</td>
+        <td>Asus ROG Zephyrus</td>
+        <td>Elektronik</td>
+        <td>15/10/2024</td>
+        <td><span style="color: #ef4444; font-weight: 600;">Rusak</span></td>
+    </tr>
+</tbody>
+                </table>
+                <div style="margin-top: 50px; display: flex; justify-content: flex-end;">
+                    <div style="text-align: center; width: 200px;">
+                        <p style="font-size: 13px; margin-bottom: 60px;">Dicetak oleh: <strong>Admin Utama</strong></p>
+                        <div style="border-top: 1px solid #000; padding-top: 5px; font-size: 13px;">( Tanda Tangan )</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 1. Munculkan notifikasi
+        function showPrintNotif() {
+            document.getElementById('notif').classList.add('show');
+        }
+
+        // 2. Fungsi Utama: Klik Notifikasi -> Hilang -> Buka File Manager
+        function triggerDownload() {
+            const notif = document.getElementById('notif');
+            
+            // LANGKAH 1: Hilangkan notifikasi segera (Sesuai arahan)
+            notif.classList.remove('show');
+
+            // LANGKAH 2: Eksekusi download/save as ke File Manager
+            // Gunakan timeout sangat singkat agar animasi 'remove' berjalan mulus bersamaan dengan pop-up sistem
+            setTimeout(() => {
+                const link = document.createElement('a');
+                
+                // Menggunakan Blob agar sistem browser memicu jendela "Save As" (File Manager)
+                const dummyContent = "Data Laporan Inventaris INV-TECH";
+                const blob = new Blob([dummyContent], { type: 'application/pdf' });
+                const url = window.URL.createObjectURL(blob);
+                
+                link.href = url;
+                link.download = 'Laporan_Global_INV_TECH_2025.pdf';
+                
+                document.body.appendChild(link);
+                link.click(); // Memicu File Manager sistem muncul
+                
+                // Bersihkan elemen
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(url);
+            }, 100);
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manajemen User - INV-TECH</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --sidebar-width: 280px;
+            --primary-color: #1e293b;
+            --accent-blue: #3b82f6;
+            --bg-light: #f1f5f9;
+            --white: #ffffff;
+            --border: #e2e8f0;
+            --text-dark: #1e293b;
+            --text-gray: #64748b;
+            --danger: #ef4444;
+            --success: #10b981;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg-light); display: flex; min-height: 100vh; }
+
+        /* SIDEBAR (Konsisten dengan menu sebelumnya) */
+        .sidebar {
+            width: var(--sidebar-width); background-color: var(--primary-color);
+            color: white; position: fixed; height: 100vh; display: flex; flex-direction: column; z-index: 100;
+        }
+        .sidebar-brand { padding: 30px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .sidebar-brand h2 { font-family: 'Poppins'; font-size: 20px; }
+        .sidebar-nav { flex: 1; padding: 20px 15px; }
+        .nav-link {
+            display: flex; align-items: center; gap: 12px; padding: 14px 20px; color: #94a3b8;
+            text-decoration: none; border-radius: 12px; margin-bottom: 8px; transition: 0.3s; font-size: 14px;
+        }
+        .nav-link.active { background: rgba(59, 130, 246, 0.1); color: var(--accent-blue); }
+
+        /* MAIN CONTENT */
+        .main-container { margin-left: var(--sidebar-width); flex: 1; padding: 40px; }
+        
+        .page-header { 
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; 
+        }
+        .page-header h1 { font-family: 'Poppins'; font-size: 24px; color: var(--primary-color); }
+
+        /* USER STATS CARDS */
+        .stats-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px; margin-bottom: 30px;
+        }
+        .stat-card {
+            background: var(--white); padding: 20px; border-radius: 16px;
+            border: 1px solid var(--border); display: flex; align-items: center; gap: 15px;
+        }
+        .stat-icon {
+            width: 45px; height: 45px; border-radius: 12px; display: flex;
+            align-items: center; justify-content: center; font-size: 20px;
+        }
+
+        /* TABLE STYLING */
+        .user-card {
+            background: var(--white); border-radius: 20px; border: 1px solid var(--border);
+            overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        }
+        .user-table { width: 100%; border-collapse: collapse; }
+        .user-table th {
+            background: #f8fafc; padding: 15px 20px; text-align: left;
+            font-size: 12px; font-weight: 600; color: var(--text-gray); text-transform: uppercase;
+        }
+        .user-table td { padding: 18px 20px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+        
+        .user-info { display: flex; align-items: center; gap: 12px; }
+        .user-avatar {
+            width: 40px; height: 40px; border-radius: 50%; background: #e2e8f0;
+            display: flex; align-items: center; justify-content: center; font-weight: 600; color: var(--accent-blue);
+        }
+        
+        .badge {
+            padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 600;
+        }
+        .badge-admin { background: rgba(59, 130, 246, 0.1); color: var(--accent-blue); }
+        .badge-staff { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+
+        /* BUTTONS */
+        .btn-add {
+            background: var(--accent-blue); color: white; border: none; padding: 12px 20px;
+            border-radius: 10px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px;
+            transition: 0.3s;
+        }
+        .btn-add:hover { background: #2563eb; transform: translateY(-2px); }
+        
+        .action-btn {
+            width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--border);
+            background: white; cursor: pointer; transition: 0.2s; color: var(--text-gray);
+        }
+        .btn-edit:hover { background: #f0fdf4; color: var(--success); border-color: var(--success); }
+        .btn-delete:hover { background: #fef2f2; color: var(--danger); border-color: var(--danger); }
+
+        /* MODAL FORM */
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
+            display: none; align-items: center; justify-content: center; z-index: 1000;
+        }
+        .modal-content {
+            background: white; width: 450px; border-radius: 24px; padding: 30px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+        }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px; color: var(--text-dark); }
+        .form-control {
+            width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 10px;
+            background: #f8fafc; outline: none; transition: 0.3s;
+        }
+        .form-control:focus { border-color: var(--accent-blue); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+    <div class="sidebar-brand">
+        <i class="fas fa-microchip"></i>
+        <h2>INV-TECH</h2>
+    </div>
+    <nav class="sidebar-nav">
+        <a href="dashboard_admin.html" class="nav-link">
+            <i class="fas fa-chart-pie"></i> Dashboard Utama
+        </a>
+        <a href="manajemen_aset.html" class="nav-link">
+            <i class="fas fa-boxes-stacked"></i> Manajemen Aset
+        </a>
+        <a href="verifikasi_pinjam.html" class="nav-link">
+            <i class="fas fa-clipboard-check"></i> Verifikasi Pinjam
+        </a>
+        <a href="monitoring_maintenance.html" class="nav-link">
+            <i class="fas fa-wrench"></i> Monitoring Maintenance
+        </a>
+        <a href="laporan_global.html" class="nav-link">
+            <i class="fas fa-file-export"></i> Laporan Global
+        </a>
+        <a href="manajemen_user.html" class="nav-link active">
+            <i class="fas fa-user-gear"></i> Manajemen User
+        </a>
+    </nav>
+</aside>
+
+    <main class="main-container">
+        <header class="page-header">
+            <div>
+                <h1>Manajemen User</h1>
+                <p style="color: var(--text-gray); font-size: 14px;">Kelola hak akses dan staf administrator sistem.</p>
+            </div>
+            <button class="btn-add" onclick="toggleModal()">
+                <i class="fas fa-plus"></i> Tambah User Baru
+            </button>
+        </header>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon" style="background: rgba(59, 130, 246, 0.1); color: var(--accent-blue);">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div>
+                    <p style="font-size: 12px; color: var(--text-gray);">Total User</p>
+                    <h3 style="font-size: 20px;">12 Staf</h3>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon" style="background: rgba(16, 185, 129, 0.1); color: var(--success);">
+                    <i class="fas fa-user-shield"></i>
+                </div>
+                <div>
+                    <p style="font-size: 12px; color: var(--text-gray);">Admin Active</p>
+                    <h3 style="font-size: 20px;">3 User</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="user-card">
+            <table class="user-table">
+                <thead>
+                    <tr>
+                        <th>Nama Staf / Email</th>
+                        <th>Role Hak Akses</th>
+                        <th>Terakhir Login</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="user-info">
+                                <div class="user-avatar">AU</div>
+                                <div>
+                                    <p style="font-weight: 600; font-size: 14px;">Admin Utama</p>
+                                    <p style="font-size: 12px; color: var(--text-gray);">admin@invtech.com</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="badge badge-admin">Super Admin</span></td>
+                        <td style="font-size: 13px;">Sekarang</td>
+                        <td><span style="color: var(--success); font-size: 12px;"><i class="fas fa-circle" style="font-size: 8px;"></i> Online</span></td>
+                        <td>
+                            <button class="action-btn btn-edit"><i class="fas fa-pen"></i></button>
+                             <button class="action-btn btn-delete" onclick="confirmDelete()"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="user-info">
+                                <div class="user-avatar" style="color: var(--success);">RK</div>
+                                <div>
+                                    <p style="font-weight: 600; font-size: 14px;">Rizky Kurniawan</p>
+                                    <p style="font-size: 12px; color: var(--text-gray);">rizky.staf@invtech.com</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="badge badge-staff">Staf Gudang</span></td>
+                        <td style="font-size: 13px;">2 jam yang lalu</td>
+                        <td><span style="color: var(--text-gray); font-size: 12px;"><i class="fas fa-circle" style="font-size: 8px;"></i> Offline</span></td>
+                        <td>
+                            <button class="action-btn btn-edit"><i class="fas fa-pen"></i></button>
+                            <button class="action-btn btn-delete" onclick="confirmDelete()"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <div class="modal-overlay" id="userModal">
+        <div class="modal-content">
+            <h2 style="font-family: 'Poppins'; margin-bottom: 20px;">Tambah User Baru</h2>
+            <div class="form-group">
+                <label>Nama Lengkap</label>
+                <input type="text" class="form-control" placeholder="Masukkan nama staf">
+            </div>
+            <div class="form-group">
+                <label>Email Perusahaan</label>
+                <input type="email" class="form-control" placeholder="staf@invtech.com">
+            </div>
+            <div class="form-group">
+                <label>Role / Jabatan</label>
+                <select class="form-control">
+                    <option>Admin Sistem</option>
+                    <option>Staf Inventaris</option>
+                    <option>Kepala Gudang</option>
+                    <option>Teknisi Maintenance</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Password Awal</label>
+                <input type="password" class="form-control" value="12345678">
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 30px;">
+                <button class="btn-add" style="flex: 1; justify-content: center;" onclick="saveUser()">Simpan User</button>
+                <button onclick="toggleModal()" style="flex: 1; background: #e2e8f0; border: none; border-radius: 10px; font-weight: 600; cursor: pointer;">Batal</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleModal() {
+            const modal = document.getElementById('userModal');
+            modal.style.display = (modal.style.display === 'flex') ? 'none' : 'flex';
+        }
+
+        function saveUser() {
+            alert('User baru berhasil ditambahkan ke database sistem!');
+            toggleModal();
+        }
+
+        function confirmDelete() {
+            if(confirm('Apakah Anda yakin ingin menghapus akses user ini?')) {
+                alert('Akses user telah dicabut.');
+            }
+        }
+    </script>
+    <script>
+    function toggleModal() {
+        const modal = document.getElementById('userModal');
+        modal.style.display = (modal.style.display === 'flex') ? 'none' : 'flex';
+    }
+
+    function saveUser() {
+        // 1. Ambil data dari Input Form
+        const nama = document.querySelectorAll('.form-control')[0].value;
+        const email = document.querySelectorAll('.form-control')[1].value;
+        const role = document.querySelectorAll('.form-control')[2].value;
+
+        // Validasi sederhana agar data tidak kosong
+        if (nama === "" || email === "") {
+            alert("Harap isi nama dan email!");
+            return;
+        }
+
+        // 2. Tampilkan Notifikasi Sukses dengan tombol Oke
+        alert("Data Berhasil Disimpan! Klik Oke untuk memperbarui daftar user.");
+
+        // 3. Buat baris tabel baru (Otomatis bertambah di konten)
+        const tableBody = document.querySelector('.user-table tbody');
+        const newRow = document.createElement('tr');
+        
+        // Ambil inisial nama untuk avatar (Contoh: Budi Doremi -> BD)
+        const initial = nama.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+
+        newRow.innerHTML = `
+            <td>
+                <div class="user-info">
+                    <div class="user-avatar" style="background: #f1f5f9; color: #3b82f6;">${initial}</div>
+                    <div>
+                        <p style="font-weight: 600; font-size: 14px;">${nama}</p>
+                        <p style="font-size: 12px; color: var(--text-gray);">${email}</p>
+                    </div>
+                </div>
+            </td>
+            <td><span class="badge ${role.includes('Admin') ? 'badge-admin' : 'badge-staff'}">${role}</span></td>
+            <td style="font-size: 13px;">Baru saja</td>
+            <td><span style="color: var(--text-gray); font-size: 12px;"><i class="fas fa-circle" style="font-size: 8px;"></i> Offline</span></td>
+            <td>
+                <button class="action-btn btn-edit"><i class="fas fa-pen"></i></button>
+                <button class="action-btn btn-delete" onclick="confirmDelete(this)"><i class="fas fa-trash"></i></button>
+            </td>
+        `;
+
+        // 4. Masukkan baris baru ke dalam tabel
+        tableBody.appendChild(newRow);
+
+        // 5. Tutup modal dan reset form
+        toggleModal();
+        document.querySelectorAll('.form-control').forEach(input => input.value = "");
+    }
+
+    // Fungsi delete yang diperbarui agar bisa menghapus baris yang baru dibuat
+    function confirmDelete(btn) {
+        if(confirm('Apakah Anda yakin ingin menghapus akses user ini?')) {
+            const row = btn.closest('tr');
+            row.remove();
+            alert('Akses user telah dicabut.');
+        }
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tambah Barang Baru - INV-TECH</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #1e293b;
+            --accent-blue: #3b82f6;
+            --bg-light: #f8fafc;
+            --white: #ffffff;
+            --border: #e2e8f0;
+            --text-gray: #64748b;
+            --success: #10b981;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg-light); color: #334155; padding: 40px; display: flex; justify-content: center; }
+
+        .form-container {
+            background: var(--white);
+            width: 100%;
+            max-width: 900px;
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        .form-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .form-header h2 { font-family: 'Poppins'; font-size: 24px; color: var(--primary-color); }
+        .btn-back { text-decoration: none; color: var(--text-gray); font-size: 14px; transition: 0.3s; font-weight: 500; }
+        .btn-back:hover { color: var(--accent-blue); }
+
+        /* Form Layout */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+        }
+
+        .full-width { grid-column: span 2; }
+
+        .input-group { margin-bottom: 5px; }
+        
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #475569;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            font-size: 14px;
+            outline: none;
+            transition: 0.3s;
+            background-color: #fcfdfe;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+            background-color: white;
+        }
+
+        /* Foto Upload Area */
+        .upload-area {
+            border: 2px dashed var(--border);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+            background: #f8fafc;
+        }
+
+        .upload-area:hover {
+            border-color: var(--accent-blue);
+            background: #eff6ff;
+        }
+
+        .upload-area i { font-size: 32px; color: var(--text-gray); margin-bottom: 10px; }
+        .upload-area p { font-size: 13px; color: var(--text-gray); }
+
+        /* Footer Buttons */
+        .form-footer {
+            margin-top: 40px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.3s;
+            text-decoration: none;
+            border: none;
+        }
+
+        .btn-cancel { background: #f1f5f9; color: #64748b; }
+        .btn-cancel:hover { background: #e2e8f0; }
+
+        .btn-save { background: var(--accent-blue); color: white; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); }
+        .btn-save:hover { background: #2563eb; transform: translateY(-2px); }
+
+        @media (max-width: 600px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .full-width { grid-column: span 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <div class="form-header">
+            <div>
+                <a href="manajemen_aset.html" class="btn-back"><i class="fas fa-arrow-left"></i> Kembali ke Daftar</a>
+                <h2 style="margin-top: 8px;">Tambah Barang Baru</h2>
+            </div>
+            <i class="fas fa-box-open" style="font-size: 40px; color: #e2e8f0;"></i>
+        </div>
+
+        <form action="#">
+            <div class="form-grid">
+                <div class="input-group">
+                    <label>Kode Aset (Unique ID)</label>
+                    <input type="text" placeholder="Contoh: #AS-2025-001" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Kategori Barang</label>
+                    <select required>
+                        <option value="" disabled selected>Pilih Kategori</option>
+                        <option value="elektronik">Elektronik</option>
+                        <option value="perkantoran">Alat Kantor</option>
+                        <option value="furniture">Furniture</option>
+                        <option value="jaringan">Perangkat Jaringan</option>
+                        <option value="medis">Alat Medis</option>
+                    </select>
+                </div>
+
+                <div class="input-group full-width">
+                    <label>Nama Barang / Perangkat</label>
+                    <input type="text" placeholder="Masukkan nama barang secara lengkap" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Lokasi Penyimpanan</label>
+                    <input type="text" placeholder="Contoh: Lab Komputer Lt. 2">
+                </div>
+
+                <div class="input-group">
+                    <label>Kondisi Saat Ini</label>
+                    <select>
+                        <option value="baik">Baru / Sangat Baik</option>
+                        <option value="normal">Normal (Bekas)</option>
+                        <option value="rusak_ringan">Rusak Ringan</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>Tanggal Perolehan / Masuk</label>
+                    <input type="date">
+                </div>
+
+                <div class="input-group">
+                    <label>Nilai Barang (Rp)</label>
+                    <input type="number" placeholder="0">
+                </div>
+
+                <div class="input-group full-width">
+                    <label>Foto Produk / Barang</label>
+                    <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Klik di sini untuk unggah foto (JPG, PNG, max 2MB)</p>
+                        <input type="file" id="fileInput" hidden>
+                    </div>
+                </div>
+
+                <div class="input-group full-width">
+                    <label>Spesifikasi Lengkap / Catatan Tambahan</label>
+                    <textarea rows="4" placeholder="Contoh: Merk, Seri, RAM, Processor, atau informasi garansi..."></textarea>
+                </div>
+            </div>
+
+            <div class="form-footer">
+                <a href="manajemen_aset.html" class="btn btn-cancel">Batalkan</a>
+                <button type="submit" class="btn btn-save" onclick="alert('Barang berhasil ditambahkan ke sistem!')">
+                    <i class="fas fa-save" style="margin-right: 8px;"></i> Simpan Barang
+                </button>
+            </div>
+        </form>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reset & Login - INV-TECH</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #10b981;
+            --bg: #f8fafc;
+            --white: #ffffff;
+            --text-main: #0f172a;
+            --text-mute: #64748b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { 
+            background-color: var(--bg); 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+        }
+
+        .forgot-box {
+            background: var(--white);
+            width: 90%;
+            max-width: 400px;
+            padding: 35px;
+            border-radius: 24px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.07);
+            text-align: center;
+        }
+
+        .icon-header {
+            width: 60px; height: 60px; background: #ecfdf5;
+            color: var(--primary); display: flex; align-items: center;
+            justify-content: center; font-size: 24px; border-radius: 50%;
+            margin: 0 auto 20px;
+        }
+
+        h2 { font-family: 'Poppins'; font-size: 22px; color: var(--text-main); margin-bottom: 8px; }
+        p { font-size: 13px; color: var(--text-mute); margin-bottom: 25px; line-height: 1.5; }
+
+        .form-group { text-align: left; margin-bottom: 18px; }
+        .form-group label { display: block; font-size: 12px; font-weight: 700; margin-bottom: 6px; color: var(--text-main); }
+        .form-group input {
+            width: 100%; padding: 13px; border-radius: 12px;
+            border: 1.5px solid #e2e8f0; outline: none; transition: 0.3s;
+        }
+        .form-group input:focus { border-color: var(--primary); }
+
+        .btn-group { display: flex; gap: 12px; margin-top: 10px; }
+
+        .btn-batal {
+            flex: 1; padding: 14px; background: #f1f5f9; color: var(--text-mute);
+            border: none; border-radius: 12px; font-weight: 600; cursor: pointer;
+            text-decoration: none; text-align: center; font-size: 14px;
+        }
+
+        .btn-kirim {
+            flex: 2; padding: 14px; background: var(--primary); color: white;
+            border: none; border-radius: 12px; font-weight: 700; cursor: pointer;
+            font-size: 14px; transition: 0.3s;
+        }
+
+        .btn-kirim:hover { background: #059669; transform: translateY(-2px); }
+        .btn-batal:hover { background: #e2e8f0; }
+
+        /* Style untuk notifikasi custom jika ingin lebih keren dari alert biasa */
+    </style>
+</head>
+<body>
+
+    <div class="forgot-box">
+        <div class="icon-header">
+            <i class="fas fa-user-shield"></i>
+        </div>
+        <h2>Reset Kata Sandi</h2>
+        <p>Silakan buat kata sandi baru untuk akun Anda agar bisa langsung masuk ke sistem.</p>
+
+        <form id="authForm">
+            <div class="form-group">
+                <label>Kata Sandi Baru</label>
+                <input type="password" id="pass1" placeholder="Masukkan sandi baru" required>
+            </div>
+            <div class="form-group">
+                <label>Konfirmasi Kata Sandi</label>
+                <input type="password" id="pass2" placeholder="Ulangi sandi baru" required>
+            </div>
+
+            <div class="btn-group">
+                <a href="login_staff.html" class="btn-batal">Batal</a>
+                
+                <button type="submit" class="btn-kirim">Kirim & Login</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('authForm').onsubmit = function(e) {
+            e.preventDefault(); // Mencegah refresh halaman otomatis
+
+            const p1 = document.getElementById('pass1').value;
+            const p2 = document.getElementById('pass2').value;
+
+            // Validasi sederhana: Cek apakah kedua password cocok
+            if (p1 !== p2) {
+                alert("❌ Maaf, kata sandi yang Anda masukkan tidak cocok. Silakan periksa kembali.");
+                return;
+            }
+
+            // Jika cocok, tampilkan notifikasi sukses
+            alert("✅ KATA SANDI DIPERBARUI!\n\nSelamat, akun Anda telah aktif kembali. Klik OK untuk langsung masuk ke Dashboard Staff.");
+
+            // RELASI LANGSUNG KE DASHBOARD STAFF
+            // Pastikan file dashboard Anda bernama 'dashboard_staff.html'
+            window.location.href = "dashboard_staff.html";
+        };
+    </script>
+
+</body>
+</html>

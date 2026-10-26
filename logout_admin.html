@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Konfirmasi Logout - INV-TECH</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #1e293b;
+            --danger-red: #ef4444;
+            --text-gray: #64748b;
+            --white: #ffffff;
+            --bg-dark: rgba(15, 23, 42, 0.95);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+
+        body { 
+            background: var(--bg-dark); 
+            height: 100vh; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            backdrop-filter: blur(12px);
+            overflow: hidden;
+        }
+
+        .logout-container {
+            background: var(--white);
+            width: 90%;
+            max-width: 400px;
+            padding: 40px;
+            border-radius: 24px;
+            text-align: center;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+            animation: popIn 0.3s ease-out;
+        }
+
+        .icon-circle {
+            width: 70px;
+            height: 70px;
+            background: #fef2f2;
+            color: var(--danger-red);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            margin: 0 auto 20px;
+        }
+
+        h2 {
+            font-family: 'Poppins';
+            font-size: 22px;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: var(--text-gray);
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 30px;
+        }
+
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        /* Tombol Link Ke Login */
+        .btn-logout {
+            background: var(--danger-red);
+            color: white;
+            text-decoration: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-logout:hover {
+            background: #dc2626;
+            transform: scale(1.02);
+        }
+
+        /* Tombol Link Ke Dashboard */
+        .btn-stay {
+            background: #f1f5f9;
+            color: #64748b;
+            text-decoration: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            display: block;
+            transition: 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-stay:hover {
+            background: #e2e8f0;
+            color: var(--primary-color);
+        }
+
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="logout-container">
+        <div class="icon-circle">
+            <i class="fas fa-sign-out-alt"></i>
+        </div>
+        
+        <h2>Konfirmasi Sesi</h2>
+        
+        <p>Sistem akan menutup sesi Anda. Pastikan semua perubahan data aset telah disimpan.</p>
+        
+        <div class="btn-group">
+            <a href="login_adminn.html" class="btn-logout">
+                <i class="fas fa-check-circle"></i> Ya, Tutup Sesi
+            </a>
+            
+            <a href="dashboard_admin.html" class="btn-stay">
+                Tetap di Sini
+            </a>
+        </div>
+    </div>
+
+</body>
+</html>

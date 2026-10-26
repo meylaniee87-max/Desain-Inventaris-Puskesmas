@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Riwayat Peminjaman - INV-TECH</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #10b981;
+            --pending: #f59e0b;
+            --success: #3b82f6;
+            --danger: #ef4444;
+            --bg: #f8fafc;
+            --white: #ffffff;
+            --text-main: #0f172a;
+            --text-mute: #64748b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg); color: var(--text-main); padding-bottom: 50px; }
+
+        /* --- HEADER --- */
+        .header {
+            background: var(--white); padding: 25px 20px;
+            position: sticky; top: 0; z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex; align-items: center; gap: 15px;
+        }
+        .back-btn { color: var(--text-main); text-decoration: none; font-size: 20px; }
+        .header h2 { font-family: 'Poppins'; font-size: 18px; }
+
+        /* --- STATS SUMMARY --- */
+        .stats-container {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 12px; padding: 20px; max-width: 600px; margin: 0 auto;
+        }
+        .stat-card {
+            background: var(--white); padding: 15px; border-radius: 16px;
+            text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            border: 1px solid #e2e8f0;
+        }
+        .stat-card span { display: block; font-size: 11px; color: var(--text-mute); font-weight: 600; margin-bottom: 5px; }
+        .stat-card b { font-size: 18px; color: var(--text-main); }
+
+        /* --- HISTORY LIST --- */
+        .history-container { padding: 0 20px; max-width: 600px; margin: 0 auto; }
+        .history-card {
+            background: var(--white); border-radius: 20px; padding: 20px;
+            margin-bottom: 15px; border: 1px solid #e2e8f0;
+            position: relative; transition: 0.3s;
+        }
+        .history-card:hover { transform: scale(1.01); }
+
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+        .asset-info h4 { font-size: 15px; font-weight: 600; color: var(--text-main); }
+        .asset-info p { font-size: 12px; color: var(--text-mute); }
+
+        /* Badge Status */
+        .status-badge {
+            padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 700;
+            text-transform: uppercase;
+        }
+        .status-pending { background: #fffbeb; color: var(--pending); }
+        .status-active { background: #eff6ff; color: var(--success); }
+        .status-returned { background: #ecfdf5; color: var(--primary); }
+        .status-rejected { background: #fef2f2; color: var(--danger); }
+
+        .card-body {
+            display: flex; gap: 20px; border-top: 1px dashed #e2e8f0;
+            padding-top: 12px; margin-top: 5px;
+        }
+        .info-item { display: flex; flex-direction: column; }
+        .info-item small { font-size: 10px; color: var(--text-mute); font-weight: 600; text-transform: uppercase; }
+        .info-item span { font-size: 13px; font-weight: 500; }
+
+        /* --- TOMBOL KEMBALIKAN --- */
+        .btn-kembali {
+            margin-top: 15px; width: 100%; padding: 12px;
+            background: var(--white); border: 1.5px solid var(--primary);
+            color: var(--primary); border-radius: 12px;
+            font-weight: 700; font-size: 13px; cursor: pointer;
+            transition: 0.3s; display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .btn-kembali:hover { background: var(--primary); color: white; }
+
+        /* --- MODAL PENGEMBALIAN --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); display: none; 
+            align-items: center; justify-content: center; z-index: 1000;
+            backdrop-filter: blur(4px);
+        }
+        .modal-content {
+            background: var(--white); width: 90%; max-width: 400px;
+            padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        .modal-content h3 { font-family: 'Poppins'; margin-bottom: 15px; font-size: 18px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 5px; color: var(--text-mute); }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%; padding: 10px; border-radius: 10px; border: 1px solid #e2e8f0; outline: none; font-size: 14px;
+        }
+        .btn-submit {
+            width: 100%; padding: 12px; background: var(--primary); color: white;
+            border: none; border-radius: 10px; font-weight: 700; cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <a href="dashboard_staff.html" class="back-btn"><i class="fas fa-arrow-left"></i></a>
+        <h2>Riwayat Pinjaman</h2>
+    </div>
+
+    <div class="stats-container">
+        <div class="stat-card"><span>Total</span><b>12</b></div>
+        <div class="stat-card"><span>Aktif</span><b id="count-aktif" style="color: var(--success);">2</b></div>
+        <div class="stat-card"><span>Selesai</span><b id="count-selesai" style="color: var(--primary);">9</b></div>
+    </div>
+
+    <div class="history-container">
+        
+        <div class="history-card" id="card-MB001">
+            <div class="card-header">
+                <div class="asset-info">
+                    <h4>MacBook Pro M1</h4>
+                    <p>ID: MB-001</p>
+                </div>
+                <span class="status-badge status-active">Sedang Dipinjam</span>
+            </div>
+            <div class="card-body">
+                <div class="info-item"><small>Pinjam</small><span>20 Des 2025</span></div>
+                <div class="info-item"><small>Kembali</small><span>27 Des 2025</span></div>
+                <div class="info-item"><small>Lokasi</small><span>Rumah (WfH)</span></div>
+            </div>
+            <button class="btn-kembali" onclick="openModal('MacBook Pro M1', 'MB-001', 'card-MB001')">
+                <i class="fas fa-undo"></i> Kembalikan Barang Ini
+            </button>
+        </div>
+
+        <div class="history-card" id="card-CAM05">
+            <div class="card-header">
+                <div class="asset-info">
+                    <h4>Sony A7 III</h4>
+                    <p>ID: CAM-05</p>
+                </div>
+                <span class="status-badge status-active">Sedang Dipinjam</span>
+            </div>
+            <div class="card-body">
+                <div class="info-item"><small>Pinjam</small><span>22 Des 2025</span></div>
+                <div class="info-item"><small>Kembali</small><span>29 Des 2025</span></div>
+                <div class="info-item"><small>Lokasi</small><span>Kantor</span></div>
+            </div>
+            <button class="btn-kembali" onclick="openModal('Sony A7 III', 'CAM-05', 'card-CAM05')">
+                <i class="fas fa-undo"></i> Kembalikan Barang Ini
+            </button>
+        </div>
+
+        <div class="history-card">
+            <div class="card-header">
+                <div class="asset-info"><h4>Logitech MX Master</h4><p>ID: MOUSE-02</p></div>
+                <span class="status-badge status-returned">Sudah Kembali</span>
+            </div>
+        </div>
+
+        <div class="history-card">
+            <div class="card-header">
+                <div class="asset-info"><h4>iPad Air Gen 5</h4><p>ID: TBL-09</p></div>
+                <span class="status-badge status-rejected">Ditolak</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="returnModal">
+        <div class="modal-content">
+            <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3 style="font-family: 'Poppins';">Konfirmasi Pengembalian</h3>
+                <i class="fas fa-times" onclick="closeModal()" style="cursor: pointer; color: var(--text-mute);"></i>
+            </div>
+            <form id="returnForm">
+                <input type="hidden" id="targetCardId">
+                <div class="form-group">
+                    <label>Barang yang Dipilih</label>
+                    <input type="text" id="assetName" readonly style="background-color: #f1f5f9; border: none; font-weight: bold; color: var(--primary);">
+                </div>
+                <div class="form-group">
+                    <label>Kondisi Saat Ini</label>
+                    <select id="kondisi" required>
+                        <option value="">Pilih Kondisi</option>
+                        <option value="Sangat Baik">Sangat Baik</option>
+                        <option value="Normal">Normal</option>
+                        <option value="Rusak">Rusak / Bermasalah</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-submit">Kirim Sekarang</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openModal(name, id, cardId) {
+            document.getElementById('assetName').value = name + " (" + id + ")";
+            document.getElementById('targetCardId').value = cardId;
+            document.getElementById('returnModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('returnModal').style.display = 'none';
+        }
+
+        document.getElementById('returnForm').onsubmit = function(e) {
+            e.preventDefault();
+            const cardId = document.getElementById('targetCardId').value;
+            const card = document.getElementById(cardId);
+            const namaBarang = document.getElementById('assetName').value;
+            const kondisiBarang = document.getElementById('kondisi').value;
+
+            // 1. Tampilkan Notifikasi
+            alert("✅ BERHASIL!\nBarang " + namaBarang + " telah dikirim pengembaliannya.\n\nKlik OKE untuk melihat pembaruan riwayat.");
+
+            // 2. Logika Perubahan Deskripsi & Status Otomatis
+            if(card) {
+                // Ubah Badge
+                const badge = card.querySelector('.status-badge');
+                badge.className = 'status-badge status-returned';
+                badge.innerText = 'Sudah Kembali';
+
+                // Hapus Tombol
+                card.querySelector('.btn-kembali').remove();
+
+                // Ubah Deskripsi Body
+                card.querySelector('.card-body').innerHTML = `
+                    <div class="info-item"><small>Selesai Pada</small><span>Hari Ini</span></div>
+                    <div class="info-item"><small>Kondisi</small><span>${kondisiBarang}</span></div>
+                    <div class="info-item"><small>Status</small><span>Validasi Admin</span></div>
+                `;
+
+                // Update Statistik
+                document.getElementById('count-aktif').innerText = "1";
+                document.getElementById('count-selesai').innerText = "10";
+            }
+
+            closeModal();
+
+            // 3. Relasi/Navigasi (Simulasi pindah ke halaman riwayat_pinjam.html)
+            // Dalam proyek nyata, baris di bawah ini akan memuat ulang halaman:
+            // window.location.href = "riwayat_pinjam.html";
+        };
+
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('returnModal')) closeModal();
+        }
+    </script>
+</body>
+</html>

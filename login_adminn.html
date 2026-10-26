@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Control Panel - INV-TECH</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --admin-primary: #1e293b; /* Dark Navy - Kesan Tegas */
+            --admin-accent: #3b82f6;  /* Blue Accent */
+            --admin-bg: #f1f5f9;
+            --text-main: #1e293b;
+            --text-light: #64748b;
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--admin-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            display: flex;
+            background: var(--white);
+            width: 100%;
+            max-width: 900px;
+            min-height: 550px;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+            margin: 20px;
+        }
+
+        /* Sisi Kiri: Visual Admin */
+        .visual-side {
+            flex: 1;
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+
+        /* Dekorasi Tambahan agar terlihat Teknis */
+        .visual-side::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.05) 1px, transparent 0);
+            background-size: 20px 20px;
+        }
+
+        .visual-side i.main-icon {
+            font-size: 80px;
+            margin-bottom: 25px;
+            color: var(--admin-accent);
+            z-index: 1;
+        }
+
+        .visual-side h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 22px;
+            margin-bottom: 15px;
+            z-index: 1;
+        }
+
+        .visual-side p {
+            font-size: 14px;
+            line-height: 1.6;
+            opacity: 0.8;
+            z-index: 1;
+        }
+
+        /* Sisi Ranan: Form Admin */
+        .form-side {
+            flex: 1;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .header-admin {
+            margin-bottom: 35px;
+        }
+
+        .header-admin h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 28px;
+            color: var(--text-main);
+            margin-bottom: 5px;
+        }
+
+        .header-admin span {
+            color: var(--admin-accent);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
+
+        .input-box {
+            position: relative;
+        }
+
+        .input-box input {
+            width: 100%;
+            padding: 14px 15px 14px 45px;
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            outline: none;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .input-box input:focus {
+            border-color: var(--admin-accent);
+            background-color: #fff;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+
+        .input-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
+        .btn-admin {
+            width: 100%;
+            padding: 16px;
+            background: var(--admin-primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-admin:hover {
+            background: #0f172a;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+        }
+
+        .security-badge {
+            margin-top: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .visual-side {
+                display: none;
+            }
+            .container {
+                max-width: 450px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="visual-side">
+            <i class="fas fa-shield-halved main-icon"></i>
+            <h3>Administrator Control</h3>
+            <p>Akses terbatas untuk pengelolaan aset, pemantauan status inventaris, dan verifikasi sistem secara menyeluruh.</p>
+        </div>
+
+        <div class="form-side">
+    <div class="header-admin">
+        <h1>INV-TECH <span>Admin</span></h1>
+        <p style="font-size: 14px; color: #64748b;">Gunakan kredensial admin Anda</p>
+    </div>
+
+    <form id="loginForm">
+        <div class="form-group">
+            <label>Admin Username</label>
+            <div class="input-box">
+                <i class="fas fa-user-shield"></i>
+                <input type="text" placeholder="Masukkan username" required>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Security Password</label>
+            <div class="input-box">
+                <i class="fas fa-key"></i>
+                <input type="password" placeholder="••••••••" required>
+            </div>
+        </div>
+
+        <button type="submit" class="btn-admin">
+            Masuk Sekarang <i class="fas fa-arrow-right-to-bracket"></i>
+        </button>
+    </form> <div class="security-badge">
+        <i class="fas fa-lock"></i> Secure 256-bit Encrypted Session
+    </div>
+</div>
+<script>
+    // Hanya menambahkan fungsi navigasi tanpa merubah elemen visual apapun
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+        e.preventDefault(); // Mencegah refresh halaman
+        window.location.href = "dashboard_admin.html"; // Berelasi ke dashboard
+    });
+</script>
+</body>
+</html>

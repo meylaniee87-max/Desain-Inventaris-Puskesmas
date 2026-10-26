@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Katalog Aset - INV-TECH</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --staf-primary: #10b981;
+            --staf-bg: #f8fafc;
+            --white: #ffffff;
+            --text-dark: #0f172a;
+            --text-gray: #64748b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--staf-bg); padding-bottom: 30px; }
+
+        /* Header */
+        .header {
+            background: var(--white); padding: 25px 20px;
+            position: sticky; top: 0; z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .header-top { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
+        .back-btn { color: var(--text-dark); font-size: 20px; text-decoration: none; }
+        
+        /* Search & Filter */
+        .search-container { position: relative; margin-bottom: 15px; }
+        .search-container input {
+            width: 100%; padding: 12px 15px 12px 45px;
+            border-radius: 12px; border: 1px solid #e2e8f0; outline: none;
+            background: #f1f5f9; transition: 0.3s;
+        }
+        .search-container input:focus { background: white; border-color: var(--staf-primary); }
+        .search-container i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-gray); }
+
+        .categories { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; scrollbar-width: none; }
+        .categories::-webkit-scrollbar { display: none; }
+        .cat-badge {
+            padding: 8px 18px; background: var(--white); border: 1px solid #e2e8f0;
+            border-radius: 20px; font-size: 13px; white-space: nowrap; cursor: pointer;
+            transition: 0.3s; color: var(--text-gray);
+        }
+        .cat-badge.active { background: var(--staf-primary); color: white; border-color: var(--staf-primary); font-weight: 600; }
+
+        /* Grid Barang */
+        .catalog-grid {
+            padding: 20px; display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 15px; max-width: 800px; margin: 0 auto;
+        }
+
+        .product-card {
+            background: var(--white); border-radius: 18px; padding: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02); border: 1px solid #f1f5f9;
+            transition: 0.3s;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .product-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px rgba(0,0,0,0.05); }
+
+        .product-img {
+            width: 100%; height: 120px; border-radius: 12px;
+            object-fit: cover; background: #f1f5f9; margin-bottom: 10px;
+        }
+
+        .product-info h4 { font-size: 14px; color: var(--text-dark); margin-bottom: 4px; }
+        .product-info p { font-size: 11px; color: var(--text-gray); margin-bottom: 8px; }
+        .stock-status { font-size: 10px; font-weight: 700; color: var(--staf-primary); margin-bottom: 10px; display: block; }
+
+        .btn-pinjam {
+            width: 100%; padding: 8px; background: #ecfdf5; color: var(--staf-primary);
+            border: none; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-pinjam:hover { background: var(--staf-primary); color: white; }
+
+        /* --- MODAL --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.7); display: none; 
+            align-items: center; justify-content: center; z-index: 1000;
+            backdrop-filter: blur(4px);
+        }
+        .modal-content {
+            background: var(--white); width: 90%; max-width: 450px;
+            padding: 30px; border-radius: 24px; animation: slideUp 0.3s ease-out;
+        }
+        @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .close-modal { cursor: pointer; font-size: 24px; color: var(--text-gray); }
+        .form-group { margin-bottom: 18px; }
+        .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 8px; color: var(--text-dark); }
+        .form-group input, .form-group textarea {
+            width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0;
+            background: #f8fafc; outline: none; font-size: 14px;
+        }
+        .btn-submit {
+            width: 100%; padding: 16px; background: var(--staf-primary); color: white;
+            border: none; border-radius: 14px; font-weight: 700; cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="header-top">
+            <a href="dashboard_staff.html" class="back-btn"><i class="fas fa-arrow-left"></i></a>
+            <h2 style="font-family: 'Poppins'; font-size: 18px;">Katalog Aset</h2>
+        </div>
+        
+        <div class="search-container">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" placeholder="Cari nama barang..." onkeyup="searchBarang()">
+        </div>
+
+        <div class="categories" id="categoryMenu">
+            <div class="cat-badge active" data-filter="Semua">Semua</div>
+            <div class="cat-badge" data-filter="Elektronik">Elektronik</div>
+            <div class="cat-badge" data-filter="Kamera">Kamera</div>
+            <div class="cat-badge" data-filter="Aksesoris">Aksesoris</div>
+            <div class="cat-badge" data-filter="Perabot">Perabot</div>
+        </div>
+    </div>
+
+    <div class="catalog-grid" id="catalogGrid">
+        <div class="product-card" data-category="Elektronik">
+            <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=300" class="product-img">
+            <div class="product-info">
+                <span class="stock-status">Tersedia: 4 Unit</span>
+                <h4>MacBook Pro M1</h4>
+                <p>ID: MB-001</p>
+                <button class="btn-pinjam" onclick="openModal('MacBook Pro M1', 'MB-001')">Pinjam Aset</button>
+            </div>
+        </div>
+
+        <div class="product-card" data-category="Elektronik">
+            <img src="https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=300" class="product-img">
+            <div class="product-info">
+                <span class="stock-status">Tersedia: 1 Unit</span>
+                <h4>Dell XPS 15</h4>
+                <p>ID: MB-022</p>
+                <button class="btn-pinjam" onclick="openModal('Dell XPS 15', 'MB-022')">Pinjam Aset</button>
+            </div>
+        </div>
+
+        <div class="product-card" data-category="Elektronik">
+            <img src="https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=300" class="product-img">
+            <div class="product-info">
+                <span class="stock-status">Tersedia: 12 Unit</span>
+                <h4>Monitor Dell 24"</h4>
+                <p>ID: MON-12</p>
+                <button class="btn-pinjam" onclick="openModal('Monitor Dell 24', 'MON-12')">Pinjam Aset</button>
+            </div>
+        </div>
+
+        <div class="product-card" data-category="Kamera">
+            <img src="img/WhatsApp Image 2025-12-25 at 10.52.18.jpeg" class="product-img">
+            <div class="product-info">
+                <span class="stock-status">Tersedia: 2 Unit</span>
+                <h4>Sony A7 III</h4>
+                <p>ID: CAM-05</p>
+                <button class="btn-pinjam" onclick="openModal('Sony A7 III', 'CAM-05')">Pinjam Aset</button>
+            </div>
+        </div>
+
+        <div class="product-card" data-category="Aksesoris">
+            <img src="https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=300" class="product-img">
+            <div class="product-info">
+                <span class="stock-status">Tersedia: 5 Unit</span>
+                <h4>iPad Air Gen 5</h4>
+                <p>ID: TBL-09</p>
+                <button class="btn-pinjam" onclick="openModal('iPad Air Gen 5', 'TBL-09')">Pinjam Aset</button>
+            </div>
+        </div>
+
+        <div class="product-card" data-category="Aksesoris">
+            <img src="https://images.unsplash.com/photo-1585338107529-13afc5f02586?w=300" class="product-img">
+            <div class="product-info">
+                <span class="stock-status">Tersedia: 8 Unit</span>
+                <h4>Logitech MX Master</h4>
+                <p>ID: MOUSE-02</p>
+                <button class="btn-pinjam" onclick="openModal('Logitech MX Master', 'MOUSE-02')">Pinjam Aset</button>
+            </div>
+        </div>
+
+        <div class="product-card" data-category="Aksesoris">
+            <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300" class="product-img">
+            <div class="product-info">
+                <span class="stock-status">Tersedia: 3 Unit</span>
+                <h4>Headset Sony XM4</h4>
+                <p>ID: AUDIO-21</p>
+                <button class="btn-pinjam" onclick="openModal('Headset Sony XM4', 'AUDIO-21')">Pinjam Aset</button>
+            </div>
+        </div>
+
+        <div class="product-card" data-category="Aksesoris">
+            <img src="img/WhatsApp Image 2025-12-25 at 10.52.17.jpeg" class="product-img">
+            <div class="product-info">
+                <span class="stock-status">Tersedia: 10 Unit</span>
+                <h4>Wacom Intuos S</h4>
+                <p>ID: DRAW-01</p>
+                <button class="btn-pinjam" onclick="openModal('Wacom Intuos S', 'DRAW-01')">Pinjam Aset</button>
+            </div>
+        </div>
+
+        <div class="product-card" data-category="Perabot">
+            <img src="img/WhatsApp Image 2025-12-25 at 20.16.04.jpeg" class="product-img">
+            <div class="product-info">
+                <span class="stock-status">Tersedia: 15 Unit</span>
+                <h4>Kursi Kantor Ergonomis</h4>
+                <p>ID: FUR-001</p>
+                <button class="btn-pinjam" onclick="openModal('Kursi Kantor Ergonomis', 'FUR-001')">Pinjam Aset</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modalPinjam">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 style="font-family: 'Poppins';">Form Peminjaman</h3>
+                <i class="fas fa-times close-modal" onclick="closeModal()"></i>
+            </div>
+            <form id="peminjamanForm">
+                <div class="form-group">
+                    <label>Barang yang Dipilih</label>
+                    <input type="text" id="namaBarangModal" readonly style="background: #f1f5f9; font-weight: bold; color: var(--staf-primary);">
+                </div>
+                <div class="form-group">
+                    <label>ID Aset</label>
+                    <input type="text" id="idBarangModal" readonly style="background: #f1f5f9; color: var(--text-gray);">
+                </div>
+                <div style="display: flex; gap: 10px;">
+                    <div class="form-group" style="flex:1;">
+                        <label>Tgl Pinjam</label>
+                        <input type="date" required>
+                    </div>
+                    <div class="form-group" style="flex:1;">
+                        <label>Tgl Kembali</label>
+                        <input type="date" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Alasan Keperluan</label>
+                    <textarea id="keperluan" rows="3" placeholder="Contoh: Meeting Proyek" required></textarea>
+                </div>
+                <button type="submit" class="btn-submit">Kirim Pengajuan</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // LOGIKA FILTER KATEGORI
+        const badges = document.querySelectorAll('.cat-badge');
+        const cards = document.querySelectorAll('.product-card');
+
+        badges.forEach(badge => {
+            badge.addEventListener('click', () => {
+                // Hapus class active dari semua badge
+                badges.forEach(b => b.classList.remove('active'));
+                // Tambah class active ke yang diklik
+                badge.classList.add('active');
+
+                const filter = badge.getAttribute('data-filter');
+
+                cards.forEach(card => {
+                    const category = card.getAttribute('data-category');
+                    if (filter === 'Semua' || filter === category) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // LOGIKA PENCARIAN (SEARCH BARANG)
+        function searchBarang() {
+            const input = document.getElementById('searchInput').value.toLowerCase();
+            cards.forEach(card => {
+                const nama = card.querySelector('h4').innerText.toLowerCase();
+                const id = card.querySelector('p').innerText.toLowerCase();
+                if (nama.includes(input) || id.includes(input)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // LOGIKA MODAL
+        const modal = document.getElementById('modalPinjam');
+        function openModal(nama, id) {
+            document.getElementById('namaBarangModal').value = nama;
+            document.getElementById('idBarangModal').value = id;
+            modal.style.display = 'flex';
+        }
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+        window.onclick = function(event) { if (event.target == modal) closeModal(); }
+
+        document.getElementById('peminjamanForm').onsubmit = function(e) {
+            e.preventDefault();
+            alert('✅ Pengajuan ' + document.getElementById('namaBarangModal').value + ' Berhasil Terkirim!');
+            closeModal();
+        }
+    </script>
+</body>
+</html>

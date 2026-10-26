@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manajemen Aset - INV-TECH</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --sidebar-width: 280px;
+            --primary-color: #1e293b;
+            --accent-blue: #3b82f6;
+            --bg-light: #f8fafc;
+            --white: #ffffff;
+            --success: #10b981; /* Hijau */
+            --danger: #ef4444;  /* Merah */
+            --warning: #f59e0b; /* Kuning/Orange */
+            --info: #3b82f6;    /* Biru */
+            --border: #e2e8f0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg-light); display: flex; min-height: 100vh; color: #334155; }
+
+        /* SIDEBAR (Sama dengan Dashboard) */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--primary-color);
+            color: white;
+            position: fixed;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .sidebar-brand {
+            padding: 30px;
+            display: flex;
+            align-items: center; gap: 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .sidebar-brand i { background: var(--accent-blue); padding: 10px; border-radius: 10px; }
+        .sidebar-brand h2 { font-family: 'Poppins'; font-size: 20px; letter-spacing: 1px; }
+
+        .sidebar-nav { flex: 1; padding: 20px 15px; }
+        .nav-link {
+            display: flex; align-items: center; gap: 12px;
+            padding: 14px 20px; color: #94a3b8; text-decoration: none;
+            border-radius: 12px; margin-bottom: 8px; transition: 0.3s; font-size: 14px;
+        }
+
+        .nav-link:hover, .nav-link.active { background: rgba(59, 130, 246, 0.1); color: var(--accent-blue); }
+
+        /* MAIN CONTENT */
+        .main-container { margin-left: var(--sidebar-width); flex: 1; padding: 40px; }
+        
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .page-header h1 { font-family: 'Poppins'; font-size: 24px; color: var(--primary-color); }
+
+        /* SEARCH & FILTER AREA */
+        .action-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+            max-width: 400px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 15px 12px 45px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            outline: none;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        .search-box input:focus { border-color: var(--accent-blue); box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1); }
+
+        .search-box i {
+            position: absolute;
+            left: 15px; top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+        }
+
+        .btn-add {
+            background-color: var(--success);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.3s;
+        }
+        .btn-add:hover { background-color: #059669; transform: translateY(-2px); }
+
+        /* TABLE DESIGN */
+        .table-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 20px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            overflow-x: auto;
+        }
+
+        table { width: 100%; border-collapse: collapse; min-width: 800px; }
+        
+        th {
+            text-align: left;
+            padding: 15px;
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #64748b;
+            background-color: #f8fafc;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        /* Striped Effect */
+        tbody tr:nth-child(even) { background-color: #fcfdfe; }
+        tbody tr:hover { background-color: #f1f5f9; transition: 0.2s; }
+
+        td { padding: 15px; font-size: 14px; vertical-align: middle; border-bottom: 1px solid #f1f5f9; }
+
+        .item-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            object-fit: cover;
+            background: #f1f5f9;
+        }
+
+        /* Status Badges */
+        .badge {
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .badge-baik { background: #dcfce7; color: #15803d; } /* Hijau */
+        .badge-rusak { background: #fee2e2; color: #dc2626; } /* Merah */
+        .badge-pinjam { background: #eff6ff; color: #1d4ed8; } /* Biru */
+
+        .badge i { font-size: 8px; }
+
+        /* Action Buttons */
+        .action-btns { display: flex; gap: 10px; }
+        .btn-action {
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            text-decoration: none;
+            color: white;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+        .btn-edit { background-color: var(--warning); }
+        .btn-edit:hover { background-color: #d97706; }
+        .btn-delete { background-color: var(--danger); }
+        .btn-delete:hover { background-color: #b91c1c; }
+
+        @media (max-width: 768px) {
+            .main-container { padding: 20px; }
+            .action-bar { flex-direction: column; align-items: stretch; }
+        }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <i class="fas fa-microchip"></i>
+            <h2>INV-TECH</h2>
+        </div>
+        <nav class="sidebar-nav">
+    <a href="dashboard_admin.html" class="nav-link"><i class="fas fa-chart-pie"></i> Dashboard Utama</a>
+    <a href="manajemen_aset.html" class="nav-link active"><i class="fas fa-boxes-stacked"></i> Manajemen Aset</a>
+    <a href="verifikasi_pinjam.html" class="nav-link"><i class="fas fa-clipboard-check"></i> Verifikasi Pinjam</a>
+    <a href="monitoring_maintenance.html" class="nav-link"><i class="fas fa-wrench"></i> Monitoring Maintenance</a>
+    <a href="laporan_global.html" class="nav-link"><i class="fas fa-file-export"></i> Laporan Global</a>
+    <a href="manajemen_user.html" class="nav-link"><i class="fas fa-user-gear"></i> Manajemen User</a>
+</nav>
+
+<div class="logout-section">
+    <a href="logout_admin.html" class="btn-logout-sidebar">
+        <i class="fas fa-power-off"></i> Keluar
+    </a>
+</div>
+    </aside>
+
+    <div class="main-container">
+        <header class="page-header">
+            <h1>Manajemen Aset</h1>
+            <div style="font-size: 14px; color: var(--text-light);">
+                Master Data / <span style="color: var(--accent-blue); font-weight: 600;">Inventaris</span>
+            </div>
+        </header>
+
+        <div class="action-bar">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Cari nama barang atau kategori...">
+            </div>
+            
+           <a href="tambah_barang.html" class="btn-add">
+    <i class="fas fa-plus-circle"></i> Tambah Barang Baru
+</a>
+        </div>
+
+        <div class="table-card">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Foto</th>
+                        <th>Kode Aset</th>
+                        <th>Nama Barang</th>
+                        <th>Kategori</th>
+                        <th>Lokasi</th>
+                        <th>Status Kondisi</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=200" alt="Laptop" class="item-img"></td>
+                        <td><strong>#AS-001</strong></td>
+                        <td>MacBook Pro M2</td>
+                        <td>Elektronik</td>
+                        <td>Lab Desain</td>
+                        <td><span class="badge badge-baik"><i class="fas fa-circle"></i> Baik</span></td>
+                        <td class="action-btns">
+                            <a href="#" class="btn-action btn-edit" title="Edit"><i class="fas fa-edit"></i></a>
+                            <a href="#" class="btn-action btn-delete" title="Hapus"><i class="fas fa-trash"></i></a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><img src="https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=200" alt="Tablet" class="item-img"></td>
+                        <td><strong>#TB-045</strong></td>
+                        <td>iPad Pro 12.9"</td>
+                        <td>Tablet</td>
+                        <td>Gudang A</td>
+                        <td><span class="badge badge-pinjam"><i class="fas fa-circle"></i> Dipinjam</span></td>
+                        <td class="action-btns">
+                            <a href="#" class="btn-action btn-edit" title="Edit"><i class="fas fa-edit"></i></a>
+                            <a href="#" class="btn-action btn-delete" title="Hapus"><i class="fas fa-trash"></i></a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><img src="img/image.png" alt="Projector" class="item-img"></td>
+                        <td><strong>#PJ-009</strong></td>
+                        <td>Proyektor Sony X</td>
+                        <td>Multimedia</td>
+                        <td>Ruang Rapat</td>
+                        <td><span class="badge badge-rusak"><i class="fas fa-circle"></i> Rusak</span></td>
+                        <td class="action-btns">
+                            <a href="#" class="btn-action btn-edit" title="Edit"><i class="fas fa-edit"></i></a>
+                            <a href="#" class="btn-action btn-delete" title="Hapus"><i class="fas fa-trash"></i></a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=200" alt="Headphone" class="item-img"></td>
+                        <td><strong>#AU-022</strong></td>
+                        <td>Headset Sony</td>
+                        <td>Audio</td>
+                        <td>Studio</td>
+                        <td><span class="badge badge-baik"><i class="fas fa-circle"></i> Baik</span></td>
+                        <td class="action-btns">
+                            <a href="#" class="btn-action btn-edit" title="Edit"><i class="fas fa-edit"></i></a>
+                            <a href="#" class="btn-action btn-delete" title="Hapus"><i class="fas fa-trash"></i></a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</body>
+</html>

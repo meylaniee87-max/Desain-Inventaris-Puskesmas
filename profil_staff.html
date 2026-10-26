@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil Staff - INV-TECH</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #10b981;
+            --primary-dark: #059669;
+            --bg: #f1f5f9;
+            --white: #ffffff;
+            --text-main: #0f172a;
+            --text-mute: #64748b;
+            --accent: #6366f1;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg); color: var(--text-main); }
+
+        /* --- HEADER --- */
+        .profile-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            height: 220px;
+            padding: 20px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+
+        .back-btn {
+            position: absolute; left: 20px; top: 20px;
+            color: white; font-size: 20px; text-decoration: none;
+            background: rgba(255,255,255,0.2);
+            width: 40px; height: 40px; display: flex;
+            align-items: center; justify-content: center;
+            border-radius: 12px; backdrop-filter: blur(5px);
+        }
+
+        /* --- PROFILE CARD --- */
+        .profile-container {
+            max-width: 500px; margin: -80px auto 30px;
+            padding: 0 20px; position: relative;
+        }
+
+        .main-card {
+            background: var(--white);
+            border-radius: 30px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.05);
+        }
+
+        .avatar-wrapper {
+            position: relative; width: 120px; height: 120px;
+            margin: -90px auto 15px;
+        }
+
+        .avatar-img {
+            width: 120px; height: 120px;
+            border-radius: 40px;
+            object-fit: cover;
+            border: 6px solid var(--white);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .status-dot {
+            position: absolute; bottom: 5px; right: 5px;
+            width: 20px; height: 20px; background: #22c55e;
+            border: 4px solid var(--white); border-radius: 50%;
+        }
+
+        .user-info h2 { font-family: 'Poppins'; font-size: 22px; margin-bottom: 5px; }
+        .user-info p { color: var(--text-mute); font-size: 14px; margin-bottom: 20px; }
+
+        .badge-group { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; }
+        .badge {
+            padding: 6px 15px; border-radius: 10px; font-size: 12px; font-weight: 600;
+            background: #f1f5f9; color: var(--text-mute);
+        }
+
+        /* --- INFO LIST --- */
+        .info-section {
+            background: var(--white); border-radius: 25px;
+            padding: 20px; margin-top: 20px;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.02);
+        }
+
+        .info-row {
+            display: flex; align-items: center; gap: 15px;
+            padding: 15px 0; border-bottom: 1px solid #f1f5f9;
+        }
+        .info-row:last-child { border-bottom: none; }
+
+        .icon-box {
+            width: 40px; height: 40px; background: #ecfdf5;
+            color: var(--primary); display: flex;
+            align-items: center; justify-content: center;
+            border-radius: 12px; font-size: 18px;
+        }
+
+        .data-label { flex: 1; }
+        .data-label span { display: block; font-size: 11px; color: var(--text-mute); font-weight: 600; text-transform: uppercase; }
+        .data-label b { font-size: 14px; color: var(--text-main); }
+
+        /* --- ACTIONS --- */
+        .action-btn {
+            width: 100%; padding: 16px; border-radius: 18px;
+            border: none; font-weight: 700; cursor: pointer;
+            margin-top: 15px; transition: 0.3s; display: flex;
+            align-items: center; justify-content: center; gap: 10px;
+        }
+        .btn-edit { background: var(--text-main); color: white; }
+        .btn-logout { background: #fee2e2; color: #ef4444; margin-top: 10px; }
+        .btn-logout:hover { background: #fecaca; }
+
+        @media (max-width: 480px) {
+            .profile-container { margin-top: -100px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="profile-header">
+        <a href="dashboard_staff.html" class="back-btn"><i class="fas fa-arrow-left"></i></a>
+    </div>
+
+    <div class="profile-container">
+        <div class="main-card">
+            <div class="avatar-wrapper">
+                <img src="img/WhatsApp Image 2025-10-11 at 22.34.43_ea0a6f12.jpg" alt="Profile" class="avatar-img">
+                <div class="status-dot"></div>
+            </div>
+            <div class="user-info">
+                <h2>Revaaa liaa</h2>
+                <p>Senior Creative Designer</p>
+            </div>
+            <div class="badge-group">
+                <div class="badge"><i class="fas fa-shield-alt"></i> Staff Verified</div>
+                <div class="badge"><i class="fas fa-clock"></i> 3 Years</div>
+            </div>
+            <button class="action-btn btn-edit" onclick="window.location.href='edit_profil.html'">
+    <i class="fas fa-edit"></i> Edit Profil
+</button>
+        </div>
+
+        <div class="info-section">
+            <div class="info-row">
+                <div class="icon-box"><i class="fas fa-id-card"></i></div>
+                <div class="data-label">
+                    <span>Nomor Induk Pegawai</span>
+                    <b>STF-2022-0401</b>
+                </div>
+            </div>
+            <div class="info-row">
+                <div class="icon-box"><i class="fas fa-envelope"></i></div>
+                <div class="data-label">
+                    <span>Email Perusahaan</span>
+                    <b>revaaa.d@invtech.co.id</b>
+                </div>
+            </div>
+            <div class="info-row">
+                <div class="icon-box"><i class="fas fa-sitemap"></i></div>
+                <div class="data-label">
+                    <span>Divisi / Departemen</span>
+                    <b>Creative & Marketing</b>
+                </div>
+            </div>
+            <div class="info-row">
+                <div class="icon-box"><i class="fas fa-phone"></i></div>
+                <div class="data-label">
+                    <span>Nomor WhatsApp</span>
+                    <b>+62 812 3456 7890</b>
+                </div>
+            </div>
+        </div>
+
+        <button class="action-btn btn-logout" onclick="window.location.href='logout_staff.html'">
+            <i class="fas fa-sign-out-alt"></i> Keluar dari Aplikasi
+        </button>
+    </div>
+
+</body>
+</html>
